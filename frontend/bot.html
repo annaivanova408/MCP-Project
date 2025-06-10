@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AI Assistant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Fonts + Tailwind -->
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Sans:wght@400;500;700;900&display=swap" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <style>
+      body {
+        font-family: "Space Grotesk", "Noto Sans", sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-[#111518] text-white min-h-screen">
+
+    <!-- HEADER -->
+    <header class="flex items-center justify-between border-b border-[#292d38] bg-[#111518] px-10 py-3">
+      <div class="flex items-center gap-3 text-white">
+        <svg class="w-5 h-5" viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z" />
+        </svg>
+        <h1 class="font-bold text-lg">Assist</h1>
+      </div>
+      <nav class="flex items-center gap-8">
+        <a class="text-sm font-medium" href="#">Overview</a>
+        <a class="text-sm font-medium" href="#">Use Cases</a>
+        <a class="text-sm font-medium" href="#">Pricing</a>
+        <a class="text-sm font-medium" href="#">Docs</a>
+        <button class="bg-[#4770ea] rounded-xl px-4 py-2 text-sm font-bold">Get Started</button>
+      </nav>
+    </header>
+
+    <!-- MAIN CHAT SECTION -->
+    <main class="flex flex-col items-center px-4 pt-10 pb-6 max-w-[960px] mx-auto w-full">
+      <!-- Title + Description -->
+      <h2 class="text-[28px] font-bold leading-tight text-center">Find. Book. Done.</h2>
+      <p class="text-base font-normal text-center mt-3 text-[#ccd4dc]">
+        Ask a question — and our AI assistant will instantly find top local services, check real-time availability, and book the best option for you. No searching. No apps. Just results.
+      </p>
+
+      <!-- Chat output -->
+      <div class="w-full mt-10 rounded-lg border border-[#3a4955] bg-[#1b2227] p-4 min-h-[400px] max-h-[600px] overflow-y-auto text-base font-normal leading-normal">
+        <p class="text-[#9bacbb]">AI response will appear here...</p>
+      </div>
+
+      <!-- Chat input -->
+      <div class="w-full flex mt-4 gap-3">
+        <input
+          type="text"
+          placeholder="Type your message here..."
+          class="form-input flex-grow rounded-lg text-white border border-[#3a4955] bg-[#1b2227] focus:outline-0 focus:ring-0 placeholder:text-[#9bacbb] px-4 py-3 text-base"
+        />
+        <button
+          class="px-6 py-3 rounded-lg bg-[#1f97f9] text-white text-sm font-bold tracking-[0.015em]"
+        >
+          Send
+        </button>
+      </div>
+    </main>
+
+  </body>
+</html>
