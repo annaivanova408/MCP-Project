@@ -18,12 +18,17 @@ git clone https://github.com/annaivanova408/MCP-Project.git
 Установка зависимостей и запуск
 
 cd frontend
+
 npm install
+
 npm run dev
+
 🔗 Приложение будет доступно по адресу: http://localhost:5173
 
 # 🧠 Бэкенд (FastAPI)
+
 Установка зависимостей и запуск
 
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
 📡 API будет доступен по адресу: http://localhost:8000
