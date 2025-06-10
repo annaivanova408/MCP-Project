@@ -1,9 +1,29 @@
+# MCP Project
 
-# MCP-Project
+Интерактивный ассистент для бронирования локальных услуг. Проект включает два модуля:
 
-# Vue 3 + Vite
+- **Frontend**: современное SPA на Vue 3 + TailwindCSS
+- **Backend**: API на FastAPI с геолокацией по IP и поддержкой AI-диалога
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+---
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## 🚀 Быстрый старт
 
+### 1. Клонируйте репозиторий
+
+git clone https://github.com/annaivanova408/MCP-Project.git
+
+
+# 🖥️ Фронтенд
+Установка зависимостей и запуск
+
+cd frontend
+npm install
+npm run dev
+🔗 Приложение будет доступно по адресу: http://localhost:5173
+
+# 🧠 Бэкенд (FastAPI)
+Установка зависимостей и запуск
+
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+📡 API будет доступен по адресу: http://localhost:8000
