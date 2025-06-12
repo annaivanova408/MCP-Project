@@ -46,18 +46,26 @@
       </p>
 
       <!-- Chat output -->
-      <div class="w-full mt-10 rounded-lg border border-[#3a4955] bg-[#1b2227] p-4 min-h-[400px] max-h-[600px] overflow-y-auto text-base font-normal leading-normal">
-        <p class="text-[#9bacbb]">AI response will appear here...</p>
+      <div class="w-full mt-10 rounded-lg border border-[#3a4955] bg-[#1b2227] p-4 min-h-[400px] max-h-[600px] overflow-y-auto text-base font-normal leading-normal space-y-3">
+        <div v-for="(msg, index) in chatHistory" :key="index" class="text-[#ccd4dc]">
+          <span class="font-bold" :class="msg.sender === 'user' ? 'text-blue-400' : 'text-purple-400'">
+            {{ msg.sender === 'user' ? 'Вы' : 'Assist' }}:
+          </span>
+          <span class="ml-2">{{ msg.text }}</span>
+       </div>
       </div>
 
       <!-- Chat input -->
       <div class="w-full flex mt-4 gap-3">
         <input
+          v-model="userMessage"
+          @keyup.enter="sendMessage"
           type="text"
           placeholder="Type your message here..."
           class="form-input flex-grow rounded-lg text-white border border-[#3a4955] bg-[#1b2227] focus:outline-0 focus:ring-0 placeholder:text-[#9bacbb] px-4 py-3 text-base"
         />
         <button
+          @click="sendMessage"
           class="px-6 py-3 rounded-lg bg-[#1f97f9] text-white text-sm font-bold tracking-[0.015em]"
         >
           Send
@@ -72,19 +80,21 @@
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 
+// Переменные
+const userMessage = ref('')
+const chatHistory = ref([])
+
 const showGeoBanner = ref(true)
 const cityName = ref('не определено')
 const manualEntry = ref(false)
 const selectedCity = ref('')
 const cityOptions = ['Москва', 'Санкт-Петербург', 'Казань', 'Екатеринбург', 'Новосибирск', 'Нижний Новгород', 'Самара']
 
-// --- IP-based fallback
+// Геолокация
 onMounted(async () => {
   try {
     const res = await fetch('http://localhost:8000/geo/ip')
     const data = await res.json()
-    console.log('[IP Geo] Ответ от бэка:', data)
-
     if (data.geo?.city) {
       cityName.value = `${data.geo.city} (по IP)`
     }
@@ -92,18 +102,13 @@ onMounted(async () => {
     console.error('[IP Geo] Ошибка получения гео:', err)
   }
 
-  // --- GPS override
   if ('geolocation' in navigator) {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords
-        console.log('[Geo] Получены координаты:', latitude, longitude)
-
         try {
           const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
-          const res = await fetch(url, {
-            headers: { 'User-Agent': 'AssistAI/1.0 (contact@example.com)' }
-          })
+          const res = await fetch(url)
           const data = await res.json()
           const geoCity = data.address?.city || data.address?.town || data.address?.village || null
           if (geoCity) {
@@ -117,24 +122,46 @@ onMounted(async () => {
         console.warn('[Geo] Ошибка геолокации:', err.message)
       }
     )
-  } else {
-    console.warn('[Geo] Геолокация не поддерживается')
   }
 })
 
+// Функции управления местоположением
 const confirmLocation = () => {
   showGeoBanner.value = false
 }
-
 const rejectLocation = () => {
   manualEntry.value = true
 }
-
 const saveManual = () => {
   if (selectedCity.value) {
     cityName.value = `${selectedCity.value} (вручную)`
     showGeoBanner.value = false
-    console.log('[Geo] Выбран вручную:', selectedCity.value)
+  }
+}
+
+// 💬 Главная функция отправки
+const sendMessage = async () => {
+  console.log('[Chat] Кнопка нажата, отправка сообщения...')
+  if (!userMessage.value.trim()) return
+
+  const question = userMessage.value
+  chatHistory.value.push({ sender: 'user', text: question })
+  userMessage.value = ''
+
+  try {
+    const res = await fetch('http://localhost:8000/mcp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: question })
+    })
+
+    const data = await res.json()
+    const reply = data.reply || 'Ошибка ответа от ассистента.'
+
+    chatHistory.value.push({ sender: 'bot', text: reply })
+  } catch (err) {
+    console.error('[Chat] Ошибка:', err)
+    chatHistory.value.push({ sender: 'bot', text: 'Ошибка связи с сервером.' })
   }
 }
 </script>
