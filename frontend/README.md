@@ -28,6 +28,6 @@ npm run dev
 
 Установка зависимостей и запуск
 
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn backend_api:app --reload --host 0.0.0.0 --port 8000
 
 📡 API будет доступен по адресу: http://localhost:8000
