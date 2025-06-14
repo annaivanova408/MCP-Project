@@ -30,12 +30,9 @@ for logger_name in loggers:
 async def main():
     config = {
         "mcpServers": {
-            "myServ": {
-                "command": "python",
-                "args": [
-                    "mcp/server.py"
-                ],
-            }  
+            "http": {
+                "url": "http://localhost:8000/sse"
+            }
         }
     }
 
