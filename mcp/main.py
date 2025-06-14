@@ -40,7 +40,7 @@ async def main():
     client = MCPClient.from_dict(config)
 
     # Create LLM
-    llm = ChatOllama(model="qwen3:0.6b")
+    llm = ChatOllama(model="qwen3:1.7b")
     # llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
 
     # Create agent with the client
@@ -49,7 +49,7 @@ async def main():
     # Run the query
     print('here')
     result = await agent.run(
-        "What is current time?",
+        "What is the distance between Zelenograd and Moscow? (think of what instruments you should use. Do not forget to use each of them )",
         max_steps=30,
     )
     with open('out.txt', 'w') as fout:
