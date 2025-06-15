@@ -1,0 +1,1 @@
+{"level":"ERROR","timestamp":"2025-06-15T16:00:58.456998","namespace":"mcp_agent.llm.providers.augmented_llm_openai.agent_one","message":"Error: Error code: 404 - {'error': {'message': 'model \"qwen3\" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}}"}

@@ -10,12 +10,12 @@ mcp = FastMCP("Demo")
 @mcp.tool(description="Инструмент, позволяющий получить координаты по названию места")
 def get_coords(address: str) -> tuple[float, float]:
     c = Client()
-    c.coordinates(address)
-    return c
+    res = c.coordinates(address)
+    return res
 
 @mcp.tool(description="Инструмент, позволяющий подсчитать геодезическое расстояни (км) между двумя координатами (ширины и долготы)")
-def get_dist(x: tuple[float, float], y: tuple[float, float]) -> float:
-    dist = geodesic(x, y).km
+def get_dist(coordinate_1: tuple[float, float], coordinate_2: tuple[float, float]) -> float:
+    dist = geodesic(coordinate_1, coordinate_2).km
     return dist
 
 if __name__ == "__main__":

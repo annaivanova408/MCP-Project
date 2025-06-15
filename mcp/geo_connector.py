@@ -33,7 +33,7 @@ class Client:
         coordinates: str = data[0]["GeoObject"]["Point"]["pos"]
         lon, lat = tuple(coordinates.split(" "))
 
-        return lon, lat
+        return lat, lon
 
     def address(self, lon: float, lat: float) -> str:
         lon = float(lon)
@@ -50,6 +50,5 @@ class Client:
 
 if __name__ == "__main__":
     c = Client()
-    res = c.address(37.21439, 55.991893)
-    res = c.address('Зеленоград')
+    res = c.coordinates('Moscow')
     print(res)

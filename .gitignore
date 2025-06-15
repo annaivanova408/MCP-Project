@@ -26,3 +26,4 @@ dist-ssr
 # Environment
 /venv
 .env
+prompt.txt
