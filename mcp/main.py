@@ -30,9 +30,12 @@ for logger_name in loggers:
 async def main():
     config = {
         "mcpServers": {
-            "http": {
-                "url": "http://localhost:8000/sse"
-            }
+            "myServ": {
+                "command": "python",
+                "args": [
+                    "mcp/server.py"
+                ],
+            }  
         }
     }
 
@@ -49,7 +52,7 @@ async def main():
     # Run the query
     print('here')
     result = await agent.run(
-        "What is the distance between Zelenograd and Moscow? (think of what instruments you should use. Do not forget to use each of them )",
+        "What is the distance between Palo Alto and San Francisco?",
         max_steps=30,
     )
     with open('out.txt', 'w') as fout:

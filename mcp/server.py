@@ -19,4 +19,4 @@ def get_dist(x: tuple[float, float], y: tuple[float, float]) -> float:
     return dist
 
 if __name__ == "__main__":
-    mcp.run(transport='sse')
+    mcp.run(transport='stdio')

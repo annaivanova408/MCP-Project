@@ -50,6 +50,5 @@ class Client:
 
 if __name__ == "__main__":
     c = Client()
-    res = c.address(37.21439, 55.991893)
-    res = c.address('Зеленоград')
+    res = c.coordinates('London')
     print(res)
