@@ -306,15 +306,26 @@ const sendMessage = async () => {
   console.log('[Chat] Кнопка нажата, отправка сообщения...')
   if (!userMessage.value.trim()) return
 
-  const question = userMessage.value
-  chatHistory.value.push({ sender: 'user', text: question })
-  userMessage.value = ''
+  const question = userMessage.value.trim()
 
+  // Получаем координаты из localStorage
+  const savedLocation = JSON.parse(localStorage.getItem('userLocation') || '{}')
+  let locationSuffix = ''
+
+  if (savedLocation.lat && savedLocation.lon) {
+    locationSuffix = ` (user location: ${savedLocation.lat}, ${savedLocation.lon})`
+  }
+
+  const fullQuestion = question + locationSuffix
+
+  chatHistory.value.push({ sender: 'user', text: fullQuestion })
+  userMessage.value = ''
+  
   try {
-    const res = await fetch('http://localhost:8000/mcp', {
+    const res = await fetch('http://localhost:8001/mcp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: question })
+      body: JSON.stringify({ message: fullQuestion })
     })
 
     const data = await res.json()

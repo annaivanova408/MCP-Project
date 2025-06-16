@@ -11,7 +11,7 @@ mcp = FastMCP("Demo")
 def get_coords(address: str) -> tuple[float, float]:
     c = Client()
     res = c.coordinates(address)
-    return res
+    return f"coordinates of {address} are ({res[0]}, {res[1]})"
 
 @mcp.tool(description="Инструмент, позволяющий подсчитать геодезическое расстояни (км) между двумя координатами (ширины и долготы)")
 def get_dist(coordinate_1: tuple[float, float], coordinate_2: tuple[float, float]) -> float:
