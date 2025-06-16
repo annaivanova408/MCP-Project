@@ -5,6 +5,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from langchain_ollama import ChatOllama
 from dotenv import load_dotenv
 from mcp_use import MCPAgent, MCPClient
+from fastapi import FastAPI, Request
+from pydantic import BaseModel
+from search_and_recommend import recommend_services  
 import logging
 
 load_dotenv('.env')
@@ -13,6 +16,13 @@ load_dotenv('.env')
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
+
+class Message(BaseModel):
+    message: str
+
+class BookingQuery(BaseModel):
+    query: str
+
 
 # CORS (если фронт на другом порту)
 app.add_middleware(
@@ -43,7 +53,7 @@ async def handle_message(request: Request):
     user_message = data.get("message", "").strip()
 
     if not user_message:
-        return {"reply": "❌ Сообщение пустое."}
+        return {"reply": "Сообщение пустое."}
 
     logging.info(f"➡️ Запрос от пользователя: {user_message}")
 
@@ -52,4 +62,21 @@ async def handle_message(request: Request):
         return {"reply": result}
     except Exception as e:
         logging.exception("Ошибка при обработке запроса:")
-        return {"reply": "❌ Ошибка обработки на сервере."}
+        return {"reply": "Ошибка обработки на сервере."}
+    
+
+@app.post("/book")
+async def book_route(payload: BookingQuery):
+    try:
+        result = recommend_services(payload.query)
+        print("DEBUG result:", result)  # ← Добавь это
+
+        return {
+            "name": result["name"],
+            "company_id": result["company_id"],
+            "services": result["services"],
+            "slot": result["slot"],
+            "link": result["link"]
+        }
+    except Exception as e:
+        return {"error": f"Ошибка: {str(e)}"}

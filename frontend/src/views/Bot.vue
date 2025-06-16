@@ -3,13 +3,10 @@
     <header class="flex justify-between items-center border-b border-[#292d38] px-10 py-3">
       <div class="flex items-center gap-4">
         <svg viewBox="0 0 48 48" fill="none" class="w-5 h-5"><!-- SVG --></svg>
-        <h2 class="text-lg font-bold">Assist</h2>
+        <h2 class="text-lg font-bold">Booker</h2>
       </div>
       <nav class="flex items-center gap-9">
         <a href="#">Overview</a>
-        <a href="#">Use Cases</a>
-        <a href="#">Pricing</a>
-        <a href="#">Docs</a>
         <RouterLink to="/bot" class="bg-[#4770ea] text-white px-4 py-2 rounded-xl text-sm font-bold">Get Started</RouterLink>
       </nav>
     </header>
@@ -70,7 +67,7 @@
       <div class="w-full mt-10 rounded-lg border border-[#3a4955] bg-[#1b2227] p-4 min-h-[400px] max-h-[600px] overflow-y-auto text-base font-normal leading-normal space-y-3">
         <div v-for="(msg, index) in chatHistory" :key="index" class="text-[#ccd4dc]">
           <span class="font-bold" :class="msg.sender === 'user' ? 'text-blue-400' : 'text-purple-400'">
-            {{ msg.sender === 'user' ? 'Вы' : 'Assist' }}:
+            {{ msg.sender === 'user' ? 'Вы' : 'Booker' }}:
           </span>
           <span class="ml-2">{{ msg.text }}</span>
        </div>
@@ -303,40 +300,79 @@ const saveManual = () => {
 
 // 💬 Главная функция отправки
 const sendMessage = async () => {
-  console.log('[Chat] Кнопка нажата, отправка сообщения...')
-  if (!userMessage.value.trim()) return
+  if (!userMessage.value.trim()) return;
 
-  const question = userMessage.value.trim()
+  const question = userMessage.value.trim();
 
-  // Получаем координаты из localStorage
-  const savedLocation = JSON.parse(localStorage.getItem('userLocation') || '{}')
-  let locationSuffix = ''
-
+  // ⛳ координаты
+  const savedLocation = JSON.parse(localStorage.getItem('userLocation') || '{}');
+  let locationSuffix = '';
   if (savedLocation.lat && savedLocation.lon) {
-    locationSuffix = ` (user location: ${savedLocation.lat}, ${savedLocation.lon})`
+    locationSuffix = ` (user location: ${savedLocation.lat}, ${savedLocation.lon})`;
   }
 
-  const fullQuestion = question + locationSuffix
+  const fullQuestion = question + locationSuffix;
 
-  chatHistory.value.push({ sender: 'user', text: fullQuestion })
-  userMessage.value = ''
-  
+  chatHistory.value.push({ sender: 'user', text: question });
+  userMessage.value = '';
+
   try {
-    const res = await fetch('http://localhost:8001/mcp', {
+    // 🤖 Если в вопросе есть слова вроде "записаться", "укладка", "стрижка" — считаем это запросом на бронирование
+    const bookingKeywords = ["booker,"];
+    const lower = question.toLowerCase();
+
+    const isBooking = bookingKeywords.some(keyword => lower.includes(keyword));
+
+    const endpoint = isBooking ? 'http://localhost:8001/book' : 'http://localhost:8001/mcp';
+    const payload = isBooking ? { query: question } : { message: fullQuestion };
+
+    const res = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: fullQuestion })
-    })
+      body: JSON.stringify(payload)
+    });
 
-    const data = await res.json()
-    const reply = data.reply || 'Ошибка ответа от ассистента.'
+    const data = await res.json();
 
-    chatHistory.value.push({ sender: 'bot', text: reply })
+    // 🎯 Вывод для бронирования
+    if (isBooking) {
+      let reply = '';
+
+      if (data.services && data.services.length > 0) {
+        reply += `Доступные услуги:\n`;
+        for (const [sid, title, pmin, pmax] of data.services) {
+          const price = pmin === pmax ? `${pmin}₽` : `${pmin}₽–${pmax}₽`;
+          reply += `• ${title} — ${price}\n`;
+        }
+      } else {
+        reply += '⚠️ Нет подходящих услуг.\n';
+      }
+
+      if (data.slot) {
+        reply += `\nБлижайшее доступное время: ${data.slot}\n`;
+      }
+
+      if (data.link) {
+        reply += `\nСсылка для записи: ${data.link}`;
+      }
+
+      chatHistory.value.push({ sender: 'bot', text: reply });
+    } else {
+      // 💬 Обычный ответ от MCP
+      let reply = data.reply || 'Ошибка ответа от ассистента.';
+      // 🧹 Обрезаем технические размышления в начале ответа
+      const cutoff = reply.indexOf("Final Answer:");
+      if (cutoff !== -1) {
+        reply = reply.slice(cutoff + "Final Answer:".length).trim();
+      }
+      chatHistory.value.push({ sender: 'bot', text: reply });
+    }
   } catch (err) {
-    console.error('[Chat] Ошибка:', err)
-    chatHistory.value.push({ sender: 'bot', text: 'Ошибка связи с сервером.' })
+    console.error('[Chat] Ошибка:', err);
+    chatHistory.value.push({ sender: 'bot', text: 'Ошибка связи с сервером.' });
   }
 }
+
 </script>
 
 <style>

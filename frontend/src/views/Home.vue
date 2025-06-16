@@ -3,13 +3,10 @@
     <header class="flex justify-between items-center border-b border-[#292d38] px-10 py-3">
       <div class="flex items-center gap-4">
         <svg viewBox="0 0 48 48" fill="none" class="w-5 h-5"><!-- SVG --></svg>
-        <h2 class="text-lg font-bold">Assist</h2>
+        <h2 class="text-lg font-bold">Booker</h2>
       </div>
       <nav class="flex items-center gap-9">
         <a href="#">Overview</a>
-        <a href="#">Use Cases</a>
-        <a href="#">Pricing</a>
-        <a href="#">Docs</a>
         <RouterLink to="/bot" class="bg-[#4770ea] text-white px-4 py-2 rounded-xl text-sm font-bold">Get Started</RouterLink>
       </nav>
     </header>
