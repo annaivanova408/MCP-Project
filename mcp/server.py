@@ -20,7 +20,7 @@ def get_dist(coordinate_1: tuple[float, float], coordinate_2: tuple[float, float
 
 @mcp.tool(description="Находит три ближайших заведения к заданным координатам (широта и долгота)")
 def get_top3_nearby_places(user_lat: float, user_lon: float) -> str:
-    csv_path = '/Users/mac/Documents/MCP-Project/mcp/companies.csv'
+    csv_path = '/Users/air/Desktop/MCP/MCP-Project/mcp/companies.csv'
     """
     Возвращает описание трёх ближайших заведений из CSV-файла, отсортированных по расстоянию.
 
@@ -52,8 +52,8 @@ def get_top3_nearby_places(user_lat: float, user_lon: float) -> str:
         for _, row in top3.iterrows():
             results.append(
                 f"{row.get('public_title') or row.get('title', 'Без названия')} — {row.get('short_descr', '')} ({row['distance_km']:.1f} км)\n"
-                f"📍 {row.get('address', 'Адрес не указан')}\n"
-                f"🔗 {row.get('default_bookform_url', 'Нет ссылки')}"
+                f"{row.get('address', 'Адрес не указан')}\n"
+                
             )
 
         return "\n\n".join(results)
