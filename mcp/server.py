@@ -11,7 +11,7 @@ mcp = FastMCP("Demo")
 def get_coords(address: str) -> tuple[float, float]:
     c = Client()
     res = c.coordinates(address)
-    return res
+    return f"coordinates of {address} are ({res[0]}, {res[1]})"
 
 @mcp.tool(description="Инструмент, позволяющий подсчитать геодезическое расстояни (км) между двумя координатами (ширины и долготы)")
 def get_dist(coordinate_1: tuple[float, float], coordinate_2: tuple[float, float]) -> float:
@@ -20,7 +20,7 @@ def get_dist(coordinate_1: tuple[float, float], coordinate_2: tuple[float, float
 
 @mcp.tool(description="Находит три ближайших заведения к заданным координатам (широта и долгота)")
 def get_top3_nearby_places(user_lat: float, user_lon: float) -> str:
-    csv_path = '/Users/air/Desktop/MCP/MCP-Project/mcp/companies.csv'
+    csv_path = '/Users/mac/Documents/MCP-Project/mcp/companies.csv'
     """
     Возвращает описание трёх ближайших заведений из CSV-файла, отсортированных по расстоянию.
 
